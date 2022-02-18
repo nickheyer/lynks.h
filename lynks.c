@@ -116,8 +116,14 @@ lynk *lynkgoto(lynk *start, int index)
 
 void lynkinsert(lynk **start, int index, lynk *l)
 { //Inserts provided lynk at specified index, of provided head lynk's attached lynks
+    
+    if (*start == NULL) //If there is no head lynk, simply assigns the lynk as the head
+    {
+        *start = l; //Points the NULL pointer to the inserted lynk
+        return;
+    }
+    
     int length = lynksize(*start);
-
     if (index == 0) //Insertion is at the first element, or lynkfront() was called
     {
         lynk *tmp = *start; //Beginning of lynk list
