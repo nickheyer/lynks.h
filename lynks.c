@@ -78,6 +78,10 @@ lynk *lynkempty(void)
 
 int lynkcount(lynk *start)
 { //Manually count each lynk attached to a head lynk, slow and used for debugging
+    if (start == NULL) //If pointer is NULL, returns a size of 0
+    {
+        return 0;
+    }
     int count = 0; //Instantiating count int
     while (start) //While lynk is not NULL, loop through each attached lynk
     {
@@ -89,13 +93,16 @@ int lynkcount(lynk *start)
 
 int lynksize(lynk *start)
 { //Returns size integer store at head lynk, should always be used over lynkcount when available
+    if (start == NULL) //If pointer is NULL, returns a size of 0
+    {
+        return 0;
+    }
     return start->size;
 }
 
-
 lynk *lynkgoto(lynk *start, int index)
 { //Traverses through the passed in lynked list until the passed in index is reached, returns lynk at index
-    if (index > lynksize(start) - 1 || index < 0)
+    if (start == NULL || index > lynksize(start) - 1 || index < 0)
     { //If requested index is larger than lynk list or smaller than zero, return NULL
         return NULL;
     }
@@ -116,15 +123,13 @@ lynk *lynkgoto(lynk *start, int index)
 
 void lynkinsert(lynk **start, int index, lynk *l)
 { //Inserts provided lynk at specified index, of provided head lynk's attached lynks
-    
+    int length = lynksize(*start);
     if (*start == NULL) //If there is no head lynk, simply assigns the lynk as the head
     {
         *start = l; //Points the NULL pointer to the inserted lynk
         return;
     }
-    
-    int length = lynksize(*start);
-    if (index == 0) //Insertion is at the first element, or lynkfront() was called
+    else if (index == 0) //Insertion is at the first element, or lynkfront() was called
     {
         lynk *tmp = *start; //Beginning of lynk list
         l->next = *start; //Inserted lynk's next is set to beginning or head lynk
@@ -220,8 +225,6 @@ lynk *lynkarr(int size)
 void lynkpop(lynk **start, int index)
 { //Removes lynk at specified index in lynks attached to head lynk
     int length = lynksize(*start);
-
-
     if (index >= length || index < 0 || length == 1)
     { //If attempting to remove lynk outside of range, or if list only has one lynk
         printf("Lynk out of range.\n");
