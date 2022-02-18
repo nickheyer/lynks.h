@@ -7,7 +7,7 @@ A more pythonic way to work with lists in C. Say no to predetermined array sizes
 3. Include lynks.c in your compiler args.
 
 # How To Use:
-1. Create the first lynk, essentially instantiating the list OR create "array" of empty lynks (see lynkarr(<size>)).
+1. Create a `lynk *ptr = NULL;`, an instantiated lynk (see below), or an "array" of lynks via `lynkarr()`.
     - `lynkempty()` | returns a lynk pointer to an empty lynk.\n
         - the data struct can hold either ints or bools or strings or char, or all four. TODO: Implementing nested linked lists and arrays.
     - `lynkint(<int you would like in this lynk>);` | returns a lynk pointer to a lynk with an integer in it.
@@ -23,7 +23,7 @@ A more pythonic way to work with lists in C. Say no to predetermined array sizes
     - `lynkarr(<quantity of lynks in "array">)` | Returns a lynk as the head of a lynk list of N elements.
 
 2. Adding lynks to the linked list.
-    1. `lynkinsert(<takes address of (&) pointer to first link>, <index in list where you want lynk inserted>, <lynk you want inserted, can be product of lynkempty() or other lynk create functions>);` | Inserts lynk at index of linked list.
+    - `lynkinsert(<takes address of (&) pointer to first link>, <index in list where you want lynk inserted>, <lynk you want inserted, can be a NULL lynk, or product of lynkempty() or other lynk create functions>);` | Inserts lynk at index of linked list.
         - Can be used with a loop/iterator like this:
             - Ex:
             `for (int x = 0; x < 10; x++)
@@ -31,7 +31,7 @@ A more pythonic way to work with lists in C. Say no to predetermined array sizes
                 lynkinsert(&list_six, x, lynkall(69, "fourtwenty", 'y', true));
             }`
         - If lynk is already existing at index, they are pushed to the right
-    2. `lynkback(<takes address of (&) pointer to first link>, <lynk you want inserted>)` | Inserts lynk at the end of the linked list, wherever that is.
+    - `lynkback(<takes address of (&) pointer to first link>, <lynk you want inserted>)` | Inserts lynk at the end of the linked list, wherever that is.
         - Can be used with a loop/iterator like this:
         - Ex:
             `for (int x = 0; x < 10; x++) // Can start loop at any value since iterator doesnt matter in regards to function input. Every call inserts at the last populated index + 1.
@@ -39,7 +39,7 @@ A more pythonic way to work with lists in C. Say no to predetermined array sizes
                 lynkback(&list_six, lynkall(69, "fourtwenty", 'y', true));
             }
             //This loop will add 10 lynks to the end of the linked list`
-    3. `lynkfront(<takes address of (&) pointer to first link>, <lynk you want inserted>)` | Inserts lynk at the 0 index, front of the list.
+    - `lynkfront(<takes address of (&) pointer to first link>, <lynk you want inserted>)` | Inserts lynk at the 0 index, front of the list.
         - Can be used with a loop/iterator like this:
         - Ex:
                 `for (int x = 0; x < 10; x++) // Can start loop at any value since iterator doesnt matter in regards to function input. Every call inserts at the last populated index 0, and shifts all others to the right.
