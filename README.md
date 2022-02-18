@@ -1,7 +1,6 @@
 # lynks
 A more pythonic way to work with lists in C.
 
-My MD skills are shit. Bare with me here.
 1. Create the first lynk, essentially instantiating the list OR create "array" of empty lynks (see lynkarr(<size>)).
     - lynk *list_one = ```lynkempty()``` | returns a lynk pointer to an empty lynk.\n
         - the data struct can hold either ints or bools or strings or char, or all four. TODO: Implementing nested linked lists and arrays.
@@ -84,4 +83,4 @@ My MD skills are shit. Bare with me here.
             }```
         - Could also do it recursively, however foundation needs to be built before implementation.
 
-
+My markdown skills are not good. Bare with me here.
