@@ -1,5 +1,5 @@
 # lynks
-A more pythonic way to work with lists in C.
+A more pythonic way to work with lists in C. Say no to predetermined array sizes.
 
 1. Create the first lynk, essentially instantiating the list OR create "array" of empty lynks (see lynkarr(<size>)).
     - lynk *list_one = `lynkempty()` | returns a lynk pointer to an empty lynk.\n
