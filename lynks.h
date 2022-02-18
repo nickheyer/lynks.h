@@ -21,6 +21,8 @@ typedef struct lynk {
 
     int size;
 
+    struct lynk *prev;
+    struct lynk *end;
     struct lynk *next;
 
 } lynk;
@@ -31,10 +33,8 @@ lynk *lynkint(int ival);
 lynk *lynkstr(char sval[]);
 lynk *lynkchar(char cval);
 lynk *lynkbool(bool bval);
-void counter(lynk *node, int *c);
 int lynkcount(lynk *start);
 int lynksize(lynk *start);
-lynk *traverse(lynk *node, int *c, int index);
 lynk *lynkgoto(lynk *start, int index);
 void lynkinsert(lynk **start, int index, lynk *l);
 void lynkback(lynk **start, lynk *l);
