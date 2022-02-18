@@ -2,16 +2,16 @@
 A more pythonic way to work with lists in C.
 1. Create the first lynk, essentially instantiating the list OR create "array" of empty lynks (see lynkarr(<size>)).\n
     - lynk *list_one = ```{lynkempty()}``` | returns a lynk pointer to an empty lynk.\n
-        1.. the data struct can hold either ints or bools or strings or char, or all four. TODO: Implementing nested linked lists and arrays.
+        - the data struct can hold either ints or bools or strings or char, or all four. TODO: Implementing nested linked lists and arrays.
     - lynk *list_two = ```{lynkint(<int you would like in this lynk>);}``` | returns a lynk pointer to a lynk with an integer in it.
     - lynk *list_three = ```{lynkstr(<str you would like in this lynk>);}``` | returns a lynk pointer to a lynk with a string in it.  | For memory sake, limiting characters to 1000
     - lynk *list_four = ```{lynkchar(<char you would like in this lynk>);}``` | returns a lynk pointer to a lynk with a char in it.
     - lynk *list_five = ```{lynkbool(<bool you would like in this lynk>);}``` | returns a lynk pointer to a lynk with a bool in it.
     - lynk *list_six = ```{ynkall(<int>, <str>, <char>, <bool>);}``` | returns a lynk pointer to a lynk with an int, string, character, and bool value in it.
-        1. For ```{lynkall()}```, if you would only like two, or three values populated, like a lynk with an int and a string, instantiate it with throwaway default values like this:
-        2. Ex:
+        - For ```{lynkall()}```, if you would only like two, or three values populated, like a lynk with an int and a string, instantiate it with throwaway default values like this:
+        - Ex:
             lynk *list_seven = ```{lynkallcreate(-1, "real value", '\0', true);}```
-        3. (```{"lynk *list_num = "}``` is an arbitrary example of how these lynk lists might be instantiated.)
+        - (```{"lynk *list_num = "}``` is an arbitrary example of how these lynk lists might be instantiated.)
     - Created lynk is ```{malloc()}```'d, so it will need to be free'd later with either ```{lynkunload()}``` or ```{lynkremove()}```, or even manually with free() though this may cause issues (See further down readme).
     - ```{lynk *list eight = lynkarr(<quantity of lynks in "array">)}``` | Returns a lynk as the head of a lynk list of N elements.
 
