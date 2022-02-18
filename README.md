@@ -1,20 +1,26 @@
-# lynks
+# lynks.h
 A more pythonic way to work with lists in C. Say no to predetermined array sizes.
 
+# Installation:
+1. Clone this repo to your project directory, or just "lynks.c" and "lynks.h".
+2. #include "lynks.h"
+3. Include lynks.c in your compiler args.
+
+# How To Use:
 1. Create the first lynk, essentially instantiating the list OR create "array" of empty lynks (see lynkarr(<size>)).
-    - lynk *list_one = `lynkempty()` | returns a lynk pointer to an empty lynk.\n
+    - `lynkempty()` | returns a lynk pointer to an empty lynk.\n
         - the data struct can hold either ints or bools or strings or char, or all four. TODO: Implementing nested linked lists and arrays.
-    - lynk *list_two = `lynkint(<int you would like in this lynk>);` | returns a lynk pointer to a lynk with an integer in it.
-    - lynk *list_three = `lynkstr(<str you would like in this lynk>);` | returns a lynk pointer to a lynk with a string in it.  | For memory sake, limiting characters to 1000
-    - lynk *list_four = `lynkchar(<char you would like in this lynk>);` | returns a lynk pointer to a lynk with a char in it.
-    - lynk *list_five = `lynkbool(<bool you would like in this lynk>);` | returns a lynk pointer to a lynk with a bool in it.
-    - lynk *list_six = `lynkall(<int>, <str>, <char>, <bool>);` | returns a lynk pointer to a lynk with an int, string, character, and bool value in it.
+    - `lynkint(<int you would like in this lynk>);` | returns a lynk pointer to a lynk with an integer in it.
+    - `lynkstr(<str you would like in this lynk>);` | returns a lynk pointer to a lynk with a string in it.  | For memory sake, limiting characters to 1000
+    - `lynkchar(<char you would like in this lynk>);` | returns a lynk pointer to a lynk with a char in it.
+    - `lynkbool(<bool you would like in this lynk>);` | returns a lynk pointer to a lynk with a bool in it.
+    - `lynkall(<int>, <str>, <char>, <bool>);` | returns a lynk pointer to a lynk with an int, string, character, and bool value in it.
         - For `lynkall()`, if you would only like two, or three values populated, like a lynk with an int and a string, instantiate it with throwaway default values like this:
-        - Ex:
+            - Ex:
             lynk *list_seven = `lynkallcreate(-1, "real value", '\0', true);`
-        - (`"lynk *list_num = "` is an arbitrary example of how these lynk lists might be instantiated.)
+        - `lynk *list_num = ` is an arbitrary example of how these lynk lists might be instantiated.
     - Created lynk is `malloc()`'d, so it will need to be free'd later with either `lynkunload()` or `lynkremove()`, or even manually with free() though this may cause issues (See further down readme).
-    - `lynk *list eight = lynkarr(<quantity of lynks in "array">)` | Returns a lynk as the head of a lynk list of N elements.
+    - `lynkarr(<quantity of lynks in "array">)` | Returns a lynk as the head of a lynk list of N elements.
 
 2. Adding lynks to the linked list.
     1. `lynkinsert(<takes address of (&) pointer to first link>, <index in list where you want lynk inserted>, <lynk you want inserted, can be product of lynkempty() or other lynk create functions>);` | Inserts lynk at index of linked list.
@@ -83,4 +89,4 @@ A more pythonic way to work with lists in C. Say no to predetermined array sizes
             }`
         - Could also do it recursively, however foundation needs to be built before implementation.
 
-My markdown skills are not good. Bare with me here.
+My markdown skills are not good. Bare with me here. Check out lynks.c for very detailed descriptions of how these lynks are implemented.
