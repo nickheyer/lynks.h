@@ -89,4 +89,4 @@ A more pythonic way to work with lists in C. Say no to predetermined array sizes
             }`
         - Could also do it recursively, however foundation needs to be built before implementation.
 
-My markdown skills are not good. Bare with me here. Check out lynks.c for very detailed descriptions of how these lynks are implemented.
+# Check out lynks.c for very detailed descriptions of how these lynks are implemented.
