@@ -170,6 +170,7 @@ void lynkfront(lynk **start, lynk *l)
 
 void lynkprint(lynk *start, char arg)
 { //Iterates through every lynk attached to provided lynk, prints the value corresponding to char arg
+    int count = 0;
     while (start)
     {
         switch(arg)
