@@ -2,7 +2,8 @@
 A more pythonic way to work with lists in C. Say no to predetermined array sizes.
 
 # Installation:
-1. Clone this repo to your project directory, or just "lynks.c" and "lynks.h".
+1. Clone this repo to your project directory, or just use this bash command while in your project dir:
+    -`wget https://raw.githubusercontent.com/nickheyer/lynks.h/main/lynks.c && wget https://raw.githubusercontent.com/nickheyer/lynks.h/main/lynks.h`
 2. #include "lynks.h"
 3. Include lynks.c in your compiler args.
 
