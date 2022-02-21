@@ -25,6 +25,12 @@ typedef struct lynk {
     struct lynk *end;
     struct lynk *next;
 
+    struct lynk* last;
+    int last_i;
+
+    struct lynk* last_r;
+    int last_ri;
+
 } lynk;
 
 lynk *lynkempty(void);

@@ -19,6 +19,10 @@ lynk *lynkall(int ival, char sval[], char cval, bool bval)
     tmp->next = NULL; //Defaulting the next lynk to NULL
     tmp->prev = NULL; //Defaulting the previous lynk to NULL
     tmp->end = tmp; //Defaulting the end lynk to be self-referential
+    tmp->last = NULL; //Defaulting the last inserted node to NULL, reserved for head node
+    tmp->last_r = NULL; //Defaulting the last removed node to NULL, reserved for head node
+    tmp->last_i = 0; //Defaulting last known insert index to 0, valgrind doesn't like it unitialized
+    tmp->last_ri= 0; //Defaulting last known removed index to 0, valgrind doesn't like it unitialized
     return tmp; //Returning the instantiated lynk
 }
 
@@ -30,6 +34,10 @@ lynk *lynkint(int ival)
     tmp->next = NULL; //Defaulting the next lynk to NULL
     tmp->prev = NULL; //Defaulting the previous lynk to NULL
     tmp->end = tmp; //Defaulting the end lynk to be self-referential
+    tmp->last = tmp; //Defaulting the last inserted node to NULL, reserved for head node
+    tmp->last_r = tmp; //Defaulting the last removed node to NULL, reserved for head node
+    tmp->last_i = 0; //Defaulting last known insert index to 0
+    tmp->last_ri= 0; //Defaulting last known removed index to 0
     return tmp; //Returning the instantiated lynk
 }
 
@@ -41,6 +49,9 @@ lynk *lynkstr(char sval[])
     tmp->next = NULL; //Defaulting the next lynk to NULL
     tmp->prev = NULL; //Defaulting the previous lynk to NULL
     tmp->end = tmp; //Defaulting the end lynk to be self-referential
+    tmp->last = NULL; //Defaulting the last inserted node to NULL, reserved for head node
+    tmp->last_i = 0; //Defaulting last known insert index to 0
+    tmp->last_ri= 0; //Defaulting last known removed index to 0
     return tmp; //Returning the instantiated lynk
 }
 
@@ -52,6 +63,10 @@ lynk *lynkchar(char cval)
     tmp->next = NULL; //Defaulting the next lynk to NULL
     tmp->prev = NULL; //Defaulting the previous lynk to NULL
     tmp->end = tmp; //Defaulting the end lynk to be self-referential
+    tmp->last = NULL; //Defaulting the last inserted node to NULL, reserved for head node
+    tmp->last_r = NULL; //Defaulting the last removed node to NULL, reserved for head node
+    tmp->last_i = 0; //Defaulting last known insert index to 0
+    tmp->last_ri= 0; //Defaulting last known removed index to 0
     return tmp; //Returning the instantiated lynk
 }
 
@@ -63,6 +78,10 @@ lynk *lynkbool(bool bval)
     tmp->next = NULL; //Defaulting the next lynk to NULL
     tmp->prev = NULL; //Defaulting the previous lynk to NULL
     tmp->end = tmp; //Defaulting the end lynk to be self-referential
+    tmp->last = NULL; //Defaulting the last inserted node to NULL, reserved for head node
+    tmp->last_r = NULL; //Defaulting the last removed node to NULL, reserved for head node
+    tmp->last_i = 0; //Defaulting last known insert index to 0
+    tmp->last_ri= 0; //Defaulting last known removed index to 0
     return tmp; //Returning the instantiated lynk
 }
 
@@ -73,11 +92,15 @@ lynk *lynkempty(void)
     tmp->next = NULL; //Defaulting the next lynk to NULL
     tmp->prev = NULL; //Defaulting the previous lynk to NULL
     tmp->end = tmp; //Defaulting the end lynk to be self-referential
+    tmp->last = NULL; //Defaulting the last inserted node to NULL, reserved for head node
+    tmp->last_r = NULL; //Defaulting the last removed node to NULL, reserved for head node
+    tmp->last_i = 0; //Defaulting last known insert index to 0
+    tmp->last_ri= 0; //Defaulting last known removed index to 0
     return tmp; //Returning the instantiated lynk
 }
 
-int lynkcount(lynk *start)
-{ //Manually count each lynk attached to a head lynk, slow and used for debugging
+int lynkcount(lynk *start) //FOR DEBUG ONLY
+{ //Manually count each lynk attached to a head lynk, slow and used for debugging.
     if (start == NULL) //If pointer is NULL, returns a size of 0
     {
         return 0;
@@ -102,23 +125,47 @@ int lynksize(lynk *start)
 
 lynk *lynkgoto(lynk *start, int index)
 { //Traverses through the passed in lynked list until the passed in index is reached, returns lynk at index
-    if (start == NULL || index > lynksize(start) - 1 || index < 0)
+    int len = lynksize(start);
+    if (index > len - 1 || index < 0)
+    {
+        printf("Index out of range, return NULL pointer\n");
+        return NULL;
+    }
+    else if (start == NULL)
     { //If requested index is larger than lynk list or smaller than zero, return NULL
         return NULL;
     }
-    int count = 0; //Instantiating count int
-    lynk *x = start; //Saving passed in lynk as x
-    while (start) //While lynk is not NULL, loop through each attached lynk
+    else if (index <= (len/2)) //If requested index is in the left half of lynk list
     {
-        x = start; //Reassigning x as current start iteration
-        if (count++ == index) //If current count is equal to the passed in index
+        int count = 0; //Instantiating count int
+        lynk *x = start; //Saving passed in lynk as x
+        while (start) //While lynk is not NULL, loop through each attached lynk
         {
-            break; //Break out of loop
+            x = start; //Reassigning x as current start iteration
+            if (count++ == index) //If current count is equal to the passed in index
+            {
+                break; //Break out of loop
+            }
+            start = start->next; //Moving to the next lynk
         }
-        start = start->next; //Moving to the next lynk
+        return x; //Returning lynk at index
     }
-    return x; //Returning lynk at index
-
+    else //If requested index is in the right half
+    {
+        int count = 0; //Instantiating count int, amount of spaces needed to move to the left from the last index
+        start = start->end;
+        lynk *x = start; //Saving passed in lynk as x
+        while (start) //While lynk is not NULL, loop through each attached lynk
+        {
+            x = start; //Reassigning x as current start iteration
+            if (count++ == len - index - 1) //If current count is equal to the amount of spaces needed to move to the left
+            {
+                break; //Break out of loop
+            }
+            start = start->prev; //Moving to the next lynk
+        }
+        return x; //Returning lynk at index
+    }
 }
 
 void lynkinsert(lynk **start, int index, lynk *l)
@@ -136,8 +183,12 @@ void lynkinsert(lynk **start, int index, lynk *l)
         l->size = tmp->size + 1; //Inserted lynk's size is set to that of the previous head lynk, plus one
         tmp->size = 1; //Setting size of previous head lynk to default, as it's no longer head lynk
         tmp->prev = l; //Setting prev of previous head lynk to newly inserted lynk
-        l->end = tmp->end; //Setting new end of lyst to the end that was stored at previous head lynk
+        l->end = tmp->end; //Setting new end of list to the end that was stored at previous head lynk
         l->prev = NULL; //Since nothing before newly inserted lynk, set prev to NULL
+        l->last = l; //Setting last known insert to self
+        l->last_i = index; //Setting last know insert index to 0
+        l->last_r = tmp->last_r; //Setting last know removed lynk to previously known, at head lynk
+        l->last_ri = tmp->last_ri; //Setting last know removed lynk index to previously known, at head lynk
         *start = l; //Changing pointer to now point to newly inserted lynk
         return;
     }
@@ -150,18 +201,34 @@ void lynkinsert(lynk **start, int index, lynk *l)
         l->prev = tmp; //Setting inserted lynk prev to previous end lynk
         tmp_2->size += 1; //Incrementing total size stored at head lynk
         tmp_2->end = l; //Changing end of lynk list to the newly inserted lynk
+        tmp_2->last = l; //Setting head lynk's last known insert to inserted lynk
+        tmp_2->last_i = index; //Setting last inserted index as the last index
 
     }
     else if (index > 0 && index < length) //Inserting between index 0 and end of list, pushing elements to right
     {
         lynk *tmp = *start; //Beginning of lynk list
-        lynk *tmp_2 = lynkgoto(*start, index - 1); //Lynk we will be inserting our lynk after
+        lynk *tmp_2; //Declaring lynk we will be inserting after
+        if (tmp->last_i == index - 1)
+        { //If the last known inserted lynk was previous to the passed in index, ie: looping +1
+            tmp_2 = tmp->last; //Initializing above lynk to the last known inserted lynk
+        }
+        else if(tmp->last_i == index + 1)
+        { //If the last known inserted lynk was following the passed in index. ie: looping -1
+            tmp_2 = tmp->last->prev;
+        }
+        else
+        {
+            tmp_2 = lynkgoto(*start, index - 1); //Lynk we will be inserting our lynk after
+        }
         lynk *tmp_3 = tmp_2->next; //Lynk we will be inserting our lynk before, pushing to right
         tmp->size = tmp->size + 1; //Incrementing the size stored at the head by +1
         tmp_2->next = l; //Setting previous lynk's next lynk to inserted lynk
         l->prev = tmp_2; //Setting inserted lynk's prev lynk to previous lynk
         l->next = tmp_3; //Setting inserted lynk's next lynk to following lynk, pushing to right
         tmp_3->prev = l; //Setting pushed lynk's prev to inserted lynk
+        tmp->last = l; //Setting head lynk's last known insert to inserted lynk
+        tmp->last_i = index; //Incrementing head lynk's last known inserted index + 1
     }
     else //If index is not within the above ranges
     {
@@ -238,6 +305,10 @@ void lynkpop(lynk **start, int index)
         tmp->size = s->size - 1; //Setting size at second lynk to be size at head lynk being removed - 1.
         tmp->prev = NULL; // Setting new head lynk (second lynk) prev to NULL
         tmp->end = s->end; //Setting new head lynk (second lynk) end to previous head lynks end lynk.
+        tmp->last = s->last; //Setting new head lynk's last inserted property to the same as previous head lynk
+        tmp->last_i = s->last_i - 1; //Setting new head lynk's last inserted index to the previous's - 1, as the list has moved one to the left
+        tmp->last_r = NULL; //Setting last removed lynk to NULL, prev lynk does not exist
+        tmp->last_ri = 0; //Setting last removed index to 0;
         free(*start); //Freeing the previous head lynk, releasing it's memory to be allocated elsewhere
         *start = tmp; //Setting the pointer for the passed in lynk to now be pointing to the new head lynk
     }
@@ -249,6 +320,8 @@ void lynkpop(lynk **start, int index)
         lynk *tmp_3 = tmp_2->prev; //Second to last lynk in lynk list
         tmp->end = tmp_3; //Setting end lynk (stored at head) to be second to last lynk
         tmp_3->next = NULL; //Setting new end lynk's next to be NULL, as it's now last in lynk list
+        tmp->last_r = tmp->last_r->prev; //Setting last removed as the lynk next to last removed, to potentially be removed on next iteration
+        tmp->last_ri = index; //Setting last removed index to passed in index
         free(tmp_2); //Freeing the previous end lynk
         tmp->size = tmp->size - 1; //Decrementing the size down by 1.
     }
@@ -256,9 +329,32 @@ void lynkpop(lynk **start, int index)
     else //Index to be removed is between 0 and size - 1
     {
         lynk *tmp = *start; //Head of lynk list
-        lynk *tmp_2 = lynkgoto(*start, index); //Lynk to be removed
+        lynk *tmp_2; //Declaring *lynk to be removed
+        if (index == tmp->last_ri + 1)
+        { //If lynk to be removed is the lynk following the previously removed lynk, ie: looping +1
+            tmp_2 = tmp->last_r->next;
+        }
+        else if (index == tmp->last_ri - 1)
+        { //If lynk to be removed is the lynk previous to the previously removed lynk, ie: looping -1
+            tmp_2 = tmp->last_r;
+        }
+        else
+        { //Must index to first location for each loop with lynkgoto(), or if lynk tbr isnt last_ri - 1 or + 1
+            tmp_2 = lynkgoto(*start, index); //Lynk to be removed
+        }
         lynk *tmp_3 = tmp_2->prev; //Lynk prev to lynk being removed
         lynk *tmp_4 = tmp_2->next; //Lynk following lynk being removed
+        if (index < tmp->last_i)
+        { //If the removed index is below the previously inserted i, adjust overall index
+            tmp->last_i -= 1;
+        }
+        else if (index == tmp->last_i)
+        { //If the previously inserted lynk is the lynk to be removed, reset previously inserted data at head to default
+            tmp->last = tmp;
+            tmp->last_i = 0;
+        }
+        tmp->last_r = tmp_2->prev; //Setting head lynk's last known removal to the lynk previous to the removed lynk
+        tmp->last_ri = index; //Setting head lynk's lkr index to the current index of removal
         free(tmp_2); //Freeing lynk to be removed
         tmp_3->next = tmp_4; //Changing previous lynk's next to following lynk
         tmp_4->prev = tmp_3; //Changing following lynk's prev to previous lynk

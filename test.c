@@ -7,13 +7,16 @@ int main(void)
     clock_t start_time = clock();
 //------------------------------------TESTING-ZONE--------------------------------------------------------
 
+    srand(time(NULL));
+    lynk *list_1 = lynkarr(50000); //Empty list
 
-    lynk *list_1 = lynkarr(50000);
-
-    for (int x = 1; x < 50000; x++)
+    for (int x = 0; x < 50000; x++)
     {
-        lynkinsert(&list_1, 25000, lynkempty());
+        lynkinsert(&list_1, rand() % 50000, lynkempty());
     }
+
+    printf("Loaded %i elements!\n", lynksize(list_1));
+
 
     lynkunload(list_1);
 
@@ -27,7 +30,10 @@ int main(void)
     1. An array of 1000 lynk lists of 1000 lynks, 1M total - 0.152493 seconds
     2. 1M lynk list of integer instantiated lynks. - 0.153707 seconds
     3. 10M lynk list of integer instantiated lynks. - 1.585455 seconds
-    4. 50k lynks inserted into middle of 50k lynk list, "random access" - 13.897690 seconds
+    4. 50k lynks inserted into middle of 50k lynk list (Index 25k+i), "random access" - Deprecated(13.897690 seconds) - 0.015510 seconds
+    5. 5M lynks inserted into middle of 5M lynk list (Index 2.5M+i), "random access" - 1.730934 seconds
+    6. 5M lynks inserted into middle of 5M lynk list (Index 2.5M+i), then removed from the middle in the reverse order of insertion, "random access" - 2.021453 seconds
+    7. 50k lynks inserted at completely random (rand()%50k) indexes within a 50k lynk list, truly random access, O(n2) unavoidable - Deprecated(22.190919 seconds) - Optimized(18.695469)
     */
 
     return 0;
