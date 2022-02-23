@@ -28,75 +28,27 @@ lynk *lynkall(int ival, char sval[], char cval, bool bval)
 
 lynk *lynkint(int ival)
 { //Creating a head lynk, while instantiating it's int value
-    lynk *tmp = malloc(sizeof(lynk)); //Allocating memory for a new lynk
-    tmp->intval = ival; //Changing the lynks intval to the passed in integer
-    tmp->size = 1; //Defaulting the size of the lynks lynk list to 1
-    tmp->next = NULL; //Defaulting the next lynk to NULL
-    tmp->prev = NULL; //Defaulting the previous lynk to NULL
-    tmp->end = tmp; //Defaulting the end lynk to be self-referential
-    tmp->last = tmp; //Defaulting the last inserted node to NULL, reserved for head node
-    tmp->last_r = tmp; //Defaulting the last removed node to NULL, reserved for head node
-    tmp->last_i = 0; //Defaulting last known insert index to 0
-    tmp->last_ri= 0; //Defaulting last known removed index to 0
-    return tmp; //Returning the instantiated lynk
+    return lynkall(ival, "", '\0', false);
 }
 
 lynk *lynkstr(char sval[])
 { //Creating a head lynk, while instantiating it's string value
-    lynk *tmp = malloc(sizeof(lynk)); //Allocating memory for a new lynk
-    strcpy(tmp->strval, sval); //Changing the lynks strval to the passed in string
-    tmp->size = 1; //Defaulting the size of the lynks lynk list to 1
-    tmp->next = NULL; //Defaulting the next lynk to NULL
-    tmp->prev = NULL; //Defaulting the previous lynk to NULL
-    tmp->end = tmp; //Defaulting the end lynk to be self-referential
-    tmp->last = NULL; //Defaulting the last inserted node to NULL, reserved for head node
-    tmp->last_i = 0; //Defaulting last known insert index to 0
-    tmp->last_ri= 0; //Defaulting last known removed index to 0
-    return tmp; //Returning the instantiated lynk
+    return lynkall(0, sval, '\0', false);
 }
 
 lynk *lynkchar(char cval)
 { //Creating a head lynk, while instantiating it's char value
-    lynk *tmp = malloc(sizeof(lynk)); //Allocating memory for a new lynk
-    tmp->charval = cval; //Changing the lynks charval to the passed in character
-    tmp->size = 1; //Defaulting the size of the lynks lynk list to 1
-    tmp->next = NULL; //Defaulting the next lynk to NULL
-    tmp->prev = NULL; //Defaulting the previous lynk to NULL
-    tmp->end = tmp; //Defaulting the end lynk to be self-referential
-    tmp->last = NULL; //Defaulting the last inserted node to NULL, reserved for head node
-    tmp->last_r = NULL; //Defaulting the last removed node to NULL, reserved for head node
-    tmp->last_i = 0; //Defaulting last known insert index to 0
-    tmp->last_ri= 0; //Defaulting last known removed index to 0
-    return tmp; //Returning the instantiated lynk
+    return lynkall(0, "", cval, false);
 }
 
 lynk *lynkbool(bool bval)
 { //Creating a head lynk, while instantiating it's bool value
-    lynk *tmp = malloc(sizeof(lynk)); //Allocating memory for a new lynk
-    tmp->boolval = bval; //Changing the lynks boolval to the passed in boolean
-    tmp->size = 1; //Defaulting the size of the lynks lynk list to 1
-    tmp->next = NULL; //Defaulting the next lynk to NULL
-    tmp->prev = NULL; //Defaulting the previous lynk to NULL
-    tmp->end = tmp; //Defaulting the end lynk to be self-referential
-    tmp->last = NULL; //Defaulting the last inserted node to NULL, reserved for head node
-    tmp->last_r = NULL; //Defaulting the last removed node to NULL, reserved for head node
-    tmp->last_i = 0; //Defaulting last known insert index to 0
-    tmp->last_ri= 0; //Defaulting last known removed index to 0
-    return tmp; //Returning the instantiated lynk
+    return lynkall(0, "", '\0', bval);
 }
 
 lynk *lynkempty(void)
 { //Creating a head lynk, nothing is instantiated
-    lynk *tmp = malloc(sizeof(lynk)); //Allocating memory for a new lynk
-    tmp->size = 1; //Defaulting the size of the lynks lynk list to 1
-    tmp->next = NULL; //Defaulting the next lynk to NULL
-    tmp->prev = NULL; //Defaulting the previous lynk to NULL
-    tmp->end = tmp; //Defaulting the end lynk to be self-referential
-    tmp->last = NULL; //Defaulting the last inserted node to NULL, reserved for head node
-    tmp->last_r = NULL; //Defaulting the last removed node to NULL, reserved for head node
-    tmp->last_i = 0; //Defaulting last known insert index to 0
-    tmp->last_ri= 0; //Defaulting last known removed index to 0
-    return tmp; //Returning the instantiated lynk
+    return lynkall(0, "", '\0', false);
 }
 
 int lynkcount(lynk *start) //FOR DEBUG ONLY
@@ -380,4 +332,209 @@ void lynkunload(lynk *start) //Unloads all lynks, provided head lynk
         start = start->next; //Changes start lynk to next lynk
         free(x); //free's previous lynk
     }
+}
+
+lynk *lynksort(lynk *l, char type, char arg)
+{ //Takes lynk*, type argument ('i' for int, 'c' for char, etc.), and order arg ('f' for forward, 'r' for reverse)
+    lynk *tmp = NULL;
+    switch(type)
+    {
+        case 'i':
+        { //If passed in type is 'i', sort ints
+            tmp = int_sorter(l, arg);
+            break;
+        }
+        case 's':
+        { //If passed in type is 's', sort strings
+           tmp = str_sorter(l, arg);
+           break;
+        }
+        case 'c':
+        { //If passed in type is 'c', sort characters
+            tmp = char_sorter(l, arg);
+            break;
+        }
+        case 'b':
+        { //If passed in type is 'b', sort booleans
+            tmp = bool_sorter(l, arg);
+            break;
+        }
+    }
+    return tmp;
+}
+
+lynk *int_sorter(lynk *l, char arg)
+{ //Sorts lynks in ascending ('f') or descending ('r') order
+    int len = lynksize(l); //Length of passed in head lynk's list
+    lynk **arr = malloc(sizeof(lynk*)*len); //Temporary array
+    int ind = 0; //Index for below while loop
+    while (l)
+    { //Appends all lynk values to array of lynks
+        arr[ind] = lynkall(l->intval, l->strval, l->charval, l->boolval); //Copies all lynk values to new lynk
+        l = l->next; //Changes to next lynk
+        ind++; //Increments index in temp array
+    }
+    for (int i = 1; i < len; i++) //For each in size of lynk list
+    {
+        int key = arr[i]->intval; //Current index
+        int j = i - 1; //Comparing with previous index
+
+        while (j >= 0 && arr[j]->intval > key)
+        { //While j is not less than zero and value at j index is greater than the value to the right of it
+            arr[j + 1]->intval = arr[j]->intval; //changing index after j to j
+            j = j - 1; //Iterating backwards
+        }
+        arr[j + 1]->intval = key; //Index after j to key
+    }
+
+    lynk *tmp = NULL;
+    for (int i = 0; i < len; i++)
+    { //Appending the array back to the null lynks, order depending on provided arg
+        if (arg == 'f')
+        { //If forward, appending to the back of the lynk list
+            lynkback(&tmp, arr[i]);
+        }
+        else if (arg == 'r')
+        { //If reverse, appending to the front of the lynk list
+            lynkfront(&tmp, arr[i]);
+        }
+    }
+    free(arr); //Frees temp array
+    return tmp; //Returning new lynk list
+}
+
+lynk *str_sorter(lynk *l, char arg)
+{ //Sorts strings lexicographically (i vs i + 1), dismisses case
+    int num_of_strings = lynksize(l); //Number of strings being sorted
+    lynk **arr = malloc(sizeof(lynk*)*num_of_strings); //Creating a temp string buffer, and a buffer array to sort strings
+    //Size of character pointer * number of strings. Dynamically allocated, stack overflows if not
+    int ind = 0; //Index for below while loop
+    while (l)
+    { //Appending strings to array of lynks
+        arr[ind] = lynkall(l->intval, l->strval, l->charval, l->boolval);
+        l = l->next;
+        ind++;
+    }
+    int i, j;
+    for (i = 0; i < num_of_strings; i++) //first string
+    {
+        for (j = i + 1; j < num_of_strings; j++) //second string
+        {
+            lynk *temp = malloc(sizeof(lynk));
+            if (strcasecmp(arr[i]->strval, arr[j]->strval) > 0) //Comparing first str to second str
+            { //If second string is sorted to before first string
+                strcpy(temp->strval, arr[i]->strval); //Copy first string to buffer var
+                strcpy(arr[i]->strval, arr[j]->strval); //Replace first string with second string
+                strcpy(arr[j]->strval, temp->strval); //Replace second string with first string (from buffer)
+            }
+            free(temp);
+        }
+    }
+    lynk *tmp = NULL; //Creating lynk set to NULL, to be filled
+    for (int x = 0; x < num_of_strings; x++)
+    {
+        if (arg == 'f')
+        { //Appending strings to the back of the lynk list, sorted order
+            lynkback(&tmp, arr[x]);
+        }
+        else if (arg == 'r')
+        { //Appending strings to the front of the lynk list, reverse-sorted order
+            lynkfront(&tmp, arr[x]);
+        }
+    }
+    free(arr); //Frees temp array
+    return tmp; //Returning new lynk list
+}
+
+lynk *char_sorter(lynk *l, char arg)
+{ //Sorts alphabetically, disregards case on sort, preserves case on output
+    int len = lynksize(l); //Length of passed in head lynk's list
+    lynk **arr = malloc(sizeof(lynk*)*len); //Temporary array
+    bool is_cap[len]; //Buffer array for capital preservation
+    int ind = 0; //Index for below while loop
+    while (l)
+    { //Appends all lynk values to array of lynks
+        char letter = l->charval;
+        is_cap[ind] = isupper(letter); //Checking if letter is upper, saving state to bool array
+        arr[ind] = lynkall(l->intval, l->strval, tolower(letter), l->boolval);
+        l = l->next;
+        ind++;
+    }
+    for (int key, j, b_key, i = 1; i < len; i++)
+    { //Iterating through letters and cap state array
+        key = arr[i]->charval; //Saving currently indexed letter to key
+        b_key = is_cap[i]; //Saving currently indexed bool to b_key
+        j = i - 1; //Comparing with previous index
+
+        while (j >= 0 && (int)arr[j]->charval > key)
+        { //While j is not less than zero and value at j index is greater than the value to the right of it
+            arr[j + 1]->charval = arr[j]->charval; //Changing index j + 1 to j
+            is_cap[j + 1] = is_cap[j]; //Appling same logic to companion array
+            j = j - 1; //Iterating backwards
+        }
+        arr[j + 1]->charval = key;
+        is_cap[j + 1] = b_key;
+    }
+    lynk *tmp = NULL; //Creating new lynk that will be provided sorted chars
+    for (int i = 0; i < len; i++)
+    {
+        if (arg == 'f')
+        { //If arg is 'f', appening to back of lynk, sorted order
+            if (is_cap[i])
+            {
+                arr[i]->charval = toupper(arr[i]->charval);
+                lynkback(&tmp, arr[i]);
+            }
+            else
+            {
+                lynkback(&tmp, arr[i]);
+            }
+        }
+        else if (arg == 'r')
+        { //If arg is 'r', appending to front of lynk, reverse-sorted order
+            if (is_cap[i])
+            {
+                arr[i]->charval = toupper(arr[i]->charval);
+                lynkfront(&tmp, arr[i]);
+            }
+            else
+            {
+                lynkfront(&tmp, arr[i]);
+            }
+        }
+    }
+    free(arr);
+    return tmp;
+}
+
+lynk *bool_sorter(lynk *l, char arg)
+{ //Sorts true / false for sorted order, false / true for reverse-order
+    lynk *tmp = NULL;
+    while (l)
+    { //Appending all letters to array as lower case, remembering case state
+        if (l->boolval)
+        {
+            if (arg == 'f')
+            {
+                lynkfront(&tmp, lynkall(l->intval, l->strval, l->charval, l->boolval));
+            }
+            else if (arg == 'r')
+            {
+                lynkback(&tmp, lynkall(l->intval, l->strval, l->charval, l->boolval));
+            }
+        }
+        else
+        {
+            if (arg == 'f')
+            {
+                lynkback(&tmp, lynkall(l->intval, l->strval, l->charval, l->boolval));
+            }
+            else if (arg == 'r')
+            {
+                lynkfront(&tmp, lynkall(l->intval, l->strval, l->charval, l->boolval));
+            }
+        }
+        l = l->next;
+    }
+    return tmp;
 }

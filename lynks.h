@@ -51,6 +51,11 @@ void lynkpop(lynk **start, int index);
 void lynkpopfront(lynk **start);
 void lynkpopback(lynk **start);
 void lynkunload(lynk *start);
+lynk *lynksort(lynk *l, char type, char arg);
+lynk *int_sorter(lynk *l, char arg);
+lynk *str_sorter(lynk *l, char arg);
+lynk *char_sorter(lynk *l, char arg);
+lynk *bool_sorter(lynk *l, char arg);
 
 
 
