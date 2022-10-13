@@ -56,10 +56,14 @@ A more pythonic way to work with lists in C. Say no to predetermined array sizes
     - `int lynksize (returns an integer of the size of the entire array stored at the head lynk, saving the iteration of the above process which is very slow.)`
 
 
-4. TODO: Potentially a sort system, creates a new linked list of newly created lynks with sorted values relative to old list. Does not unload old list.
+4. Lynk Sort System
+    - `lynksort(<takes *lynk pointer>, <takes argument for sort type, ie: 'i' for int, 'c' for char, etc.>, <takes order argument, 'f' for forward, 'r' for reverse>)`
+    - Creates a new lynk list, sorted based on the provided arguments. 
+    - Uses a variety of sorting methods, depending on data type.
+    - Returns a new sorted lynk list.
 
 5. Lynk selection function
-    - `lynkgoto(<takes *lynk pointer>, <takes index of lynk you would like selected>)
+    - `lynkgoto(<takes *lynk pointer>, <takes index of lynk you would like selected>)`
         - Example of looping through 10 lynks in list_1 to get the sum of it's integer values.
         - Ex:
             `int sum = 0;
@@ -91,5 +95,9 @@ A more pythonic way to work with lists in C. Say no to predetermined array sizes
                 free(lynkgoto(list_1, x));
             }`
         - Could also do it recursively, however foundation needs to be built before implementation.
+
+8. Lynk Utility functions
+    - `lynkprint(<takes lynk>, <takes argument of what is to be printed, ie: 'i', 's', 'c', 'b'>)`
+        - Iterates through every lynk attached to provided lynk, prints the value corresponding to char arg.
 
 # Check out [lynks.c](https://github.com/nickheyer/lynks.h/blob/main/lynks.c) for very detailed descriptions of how these lynks are implemented.

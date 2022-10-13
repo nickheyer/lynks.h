@@ -12,7 +12,7 @@ int main(void)
 
     for (int x = 0; x < 10000; x++)
     {
-        char tmp[7];
+        char tmp[8];
         tmp[0] = (rand() % 65) + 57;
         tmp[1] = (rand() % 65) + 57;
         tmp[2] = (rand() % 65) + 57;
